@@ -1239,13 +1239,13 @@ start_rtcp_thread (GstRtpSession * rtpsession)
     /* if the thread stopped, and we still have a handle to the thread, join it
      * now. We can safely join with the lock held, the thread will not take it
      * anymore. */
-    if (rtpsession->priv->thread)
-      g_thread_join (rtpsession->priv->thread);
-    /* only create a new thread if the old one was stopped. Otherwise we can
-     * just reuse the currently running one. */
-    rtpsession->priv->thread = g_thread_try_new ("rtpsession-rtcp",
-        (GThreadFunc) rtcp_thread, rtpsession, &error);
-    rtpsession->priv->thread_stopped = FALSE;
+    // if (rtpsession->priv->thread)
+    //   g_thread_join (rtpsession->priv->thread);
+    // /* only create a new thread if the old one was stopped. Otherwise we can
+    //  * just reuse the currently running one. */
+    // rtpsession->priv->thread = g_thread_try_new ("rtpsession-rtcp",
+    //     (GThreadFunc) rtcp_thread, rtpsession, &error);
+    // rtpsession->priv->thread_stopped = FALSE;
   }
   GST_RTP_SESSION_UNLOCK (rtpsession);
 
@@ -1266,9 +1266,9 @@ stop_rtcp_thread (GstRtpSession * rtpsession)
 
   GST_RTP_SESSION_LOCK (rtpsession);
   rtpsession->priv->stop_thread = TRUE;
-  signal_waiting_rtcp_thread_unlocked (rtpsession);
-  if (rtpsession->priv->id)
-    gst_clock_id_unschedule (rtpsession->priv->id);
+  // signal_waiting_rtcp_thread_unlocked (rtpsession);
+  // if (rtpsession->priv->id)
+  //   gst_clock_id_unschedule (rtpsession->priv->id);
   GST_RTP_SESSION_UNLOCK (rtpsession);
 }
 
@@ -1314,7 +1314,7 @@ gst_rtp_session_change_state (GstElement * element, GstStateChange transition)
       /* no need to join yet, we might want to continue later. Also, the
        * dataflow could block downstream so that a join could just block
        * forever. */
-      stop_rtcp_thread (rtpsession);
+      // stop_rtcp_thread (rtpsession);
       break;
     default:
       break;
@@ -1324,14 +1324,14 @@ gst_rtp_session_change_state (GstElement * element, GstStateChange transition)
 
   switch (transition) {
     case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
-      if (!start_rtcp_thread (rtpsession))
-        goto failed_thread;
+      // if (!start_rtcp_thread (rtpsession))
+      //   goto failed_thread;
       break;
     case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
       break;
     case GST_STATE_CHANGE_PAUSED_TO_READY:
       /* downstream is now releasing the dataflow and we can join. */
-      join_rtcp_thread (rtpsession);
+      // join_rtcp_thread (rtpsession);
       rtp_session_reset (rtpsession->priv->session);
       break;
     case GST_STATE_CHANGE_READY_TO_NULL:
