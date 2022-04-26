@@ -2938,11 +2938,6 @@ gst_rtspsrc_perform_seek (GstRTSPSrc * src, GstEvent * event)
     src->clip_out_segment = ! !(flags & GST_SEEK_FLAG_ACCURATE);
   } 
 
-  if(playing){
-     gst_rtspsrc_close(src, FALSE, TRUE);
-     gst_rtspsrc_pause (src, FALSE); 
-     src->state = GST_RTSP_STATE_SEEKING;  
-  }
   /* now we did the seek and can activate the new segment values */
   src->segment = seeksegment;
 
